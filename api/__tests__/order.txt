@@ -1,0 +1,659 @@
+import request from 'supertest';
+
+
+describe.skip(" Gigs API" , () => {
+
+    
+    it("should run", ()=>{
+        console.log("hollyb bbbbbb")
+    })
+
+})
+
+
+/*import {app} from '../app.js'
+import supertest from "supertest";
+import mongoose from "mongoose";
+import connect from "../database/mongo-connect.js";
+import Gig from "../models/gig.model.js";
+import Review from "../models/review.model.js";
+import jwt  from 'jsonwebtoken';
+
+
+
+const request = supertest(app);
+
+// THIS IMPORTED APP HAS NOTHING TO DO WITH THE SERVER, SUPERTEST IS USING THE APP ROUTES AND IS MAKING 
+// HTTP REQS AND RESPONSES ON ITS OWN AND ONLY NEEDS ACCESS TO A TEST DATABASE
+// THE APP IN SERVER JS CONNECTS TO THE REAL DATABASE
+
+
+// USER FOR THE TESTS 
+export const userPayload = {
+  _id:"ead3c3b4-d6af-426d-8390-ce34ddca41ac",   // ONLY DECLARING ID UPFRONT TO TEST IT AGAINST THE COOKIE IN RESPONSE HEADER
+  username : "user11",
+  password : "password",
+  email : "user11@gmail.com",
+  isSeller: true
+};
+
+export const userPayloadDuplicatedName = {
+  _id:"dfceed4f-5c82-4b6a-962d-340153961f41", // USES A DIFFERENT ID AND EMAIL
+  username : "user11",
+  password : "password",
+  email : "userAny@gmail.com",
+  isSeller: true
+};
+
+export const userPayloadSecond = {
+  _id: "32de6d6a-6880-4e97-9184-56146bee3eb9",
+  username : "user22",
+  password : "password",
+  email : "user22@gmail.com"
+};
+
+export const userPayloadInvalid = {
+  _id:"2620cb60-74c0-4nn-ujjx", // NO SUCH USER WITH THIS ID AND PAYLOAD MISSING REQUIRED EMAIL FIELD
+  username : "user11-invalid",
+  password : "password",
+  //email : "user1@gmail.com"
+};
+
+export const userPayloadIncorrect = {
+  username : "user11",
+  password : "incorrectPassword",
+  email : "user1@gmail.com"
+};
+
+export const userPayloadUpdated = {
+    _id:"ead3c3b4-d6af-426d-8390-ce34ddca41ac",   // ONLY UPDATING USERNAME 
+    username : "updatedUser11",
+    password : "password",
+    email : "user11@gmail.com",
+    isSeller: true
+  };
+
+
+
+mongoose.set("strictQuery", true); 
+
+const dbConnection = async ()=>{
+    await connect(process.env.MONGO_TEST_DB)
+    console.log("CONNECTED TO THE TEST DATABASE");
+}
+
+
+describe("user", () => {
+
+    // ONE BIG DESCRIBE FOR ALL OPERATIONS FOR THE AUTH CONTROLLERS
+
+  beforeAll(async () => {
+    // CONNECT TO TEST DATABASE
+    dbConnection()
+    // CLEAR AUTH/USERS IF YOU HAVE ALREADY CREATED A AUTH/USERS WITH THE SAME _ID IN A PREVIOUS TEST
+    await User.deleteMany({})// TEST WILL BREAK IF YOU DELETE ALL USERS HERE 
+   
+  });
+
+   // CLOSING CONNECTION TO DATABSE AND CLEARING DATABASE AFTER FINISHING ALL TESTS
+
+  afterAll(async () => {
+    await User.deleteMany({}); // CLEARING THE TEST DATABASE COLLECTION AFTER TESTING// IT SHOULD BE EMPTY AS THE TEST ENDS WITH A DELETE
+    await mongoose.disconnect();
+    await mongoose.connection.close();
+  });
+
+
+// CREATING USERS THE SAME WAY AS IN THE AUTH TEST FILE/ NECESSARY TO RUN TESTS FOR USER ROUTES
+  describe("registering / create a user route", () => {
+    // TESTS FOR CREATING A AUTH/USERS  CONTROLLER STARTS HERE
+
+
+
+        describe("given the user tries to create a user not matching the correct schema" , () => { 
+    
+          it("should return a 400 status code with a specific error message", async () => {
+
+            // POST REQUEST IS SENDING AN OBJECT WITH AN INVALID SCHEMA WHICH WILL RESULT IN A SERVER ERROR, OBJECT IS MISSING A REQUIRED FIELD    
+
+            const {body, statusCode} =  await request.post(`/api/auth/register/`).send(userPayloadInvalid)
+            
+            expect(statusCode).toBe(400)
+            expect(typeof body.errorMessage).toBe("string") 
+            // WE CANNOT TELL WHAT THE ERROR MESSAGE WILL BE BUT IT WILL BE SENT
+
+            }, 70000);
+
+            // END OF IT BLOCK
+        
+        }); // END OF DESCRIBE BLOCK
+
+
+        describe("given the user creates a user succesfully ", () => {  
+    
+          it("should return a 201 status code and a success message : User has been created succesfully. ", async () => {
+
+              
+              // POST REQUEST IS SENDING AN OBJECT WITH A VALID SCHEMA
+          
+              const {body, statusCode} =  await request.post(`/api/auth/register`).send(userPayload)
+              
+              expect(statusCode).toBe(201)
+              expect(body.successMessage).toBe("User has been created succesfully.")
+              
+
+          }, 70000);
+              
+              // END OF IT BLOCK
+
+          }); // END OF DESCRIBE BLOCK  
+
+
+        describe("given the user creates a second user succesfully ", () => {  
+
+          it("should return a 201 status code and a success message : User has been created succesfully. ", async () => {
+
+              
+              // POST REQUEST IS SENDING AN OBJECT WITH A VALID SCHEMA
+          
+              const {body, statusCode} =  await request.post(`/api/auth/register`).send(userPayloadSecond)
+              
+              expect(statusCode).toBe(201)
+              expect(body.successMessage).toBe("User has been created succesfully.")
+              
+
+          }, 70000);
+              
+              // END OF IT BLOCK
+
+          }); // END OF DESCRIBE BLOCK 
+
+
+        describe("given the user tries to create an already existing user " , () => { 
+
+          it("should return a 409 status code with a specific error message", async () => {
+
+            // POST REQUEST IS SENDING AN OBJECT WITH A VALID SCHEMA, BUT HAS A DUPLICATED USERNAME
+
+            const {body, statusCode} =  await request.post(`/api/auth/register`).send(userPayloadDuplicatedName)
+            
+            expect(statusCode).toBe(409)
+            expect(typeof body.errorMessage).toBe("string") 
+            // WE CANNOT TELL WHAT THE ERROR MESSAGE WILL BE BUT IT WILL BE SENT
+
+            }, 70000);
+
+            // END OF IT BLOCK
+        
+        }); // END OF DESCRIBE BLOCK
+  
+    });      
+
+
+    
+ 
+
+
+describe("getting a user route", ()=> {
+
+       
+    describe("given the user to get does not exist ", () => {
+
+      it("should return a 404 with the message : That user does not exist! ", async () => {
+
+     const {body, statusCode} =   await request.get(`/api/users/${userPayloadInvalid._id}`)
+      
+      // CONTROLLER WILL CHECK TO SEE IF THE USER EXISTS
+
+      expect(statusCode).toBe(404)
+      expect(body.errorMessage).toBe("That user does not exist!")
+
+      }, 70000);
+
+          // END OF IT BLOCK
+  
+  }); // END OF DESCRIBE BLOCK 
+
+
+
+  describe("given the user does exit", () => {
+
+    it("should return a 200 statusCode and users info without password ", async () => {
+
+    // EXPANDING ON THE IT , should return a 200 statusCode, the users info without the password,
+    // an accessToken in the cookie in the header with the correct users details and the httpOnly header set to true!
+
+      const response =  await request.get(`/api/users/${userPayload._id}`)
+    
+    // CONTROLLER WILL CHECK TO SEE IF THE AUTH/USERS  EXISTS
+
+    const {body, statusCode} = response
+
+    
+    expect(statusCode).toBe(200)
+    expect(body._id).toBe(userPayload._id)
+    expect(body.password).toBe(undefined)      // USER DETAILS ARE SENT BACK EXCEPT FOR PASSWORD
+    expect(userPayload.password).toBe("password") 
+    
+   
+    
+    // VERIFIED THAT A TOKEN WAS CREATED CONTAING THE CORRECT DETAILS AND HTTPONLY IS SET TO TRUE
+
+    }, 70000);
+
+        // END OF IT BLOCK
+
+}); // END OF DESCRIBE BLOCK WHICH CHECKS IF AUTH/USERS  TO UPDATE EXISTS
+
+
+
+
+})
+
+
+
+
+
+describe("updating a user route", () => {
+    // TESTS FOR UPDATING A GIG CONTROLLER STARTS HERE
+ 
+    // THIS ROUTE IS PROTECTED BY THE JWT MIDDLEWARE FOR BOTH AUTHENTICATION AND PASSING ON THE DETAILS FOR ROLE AUTHORISATION) 
+    
+    // AUTHENTICATION MIDDLEWARE TESTING
+
+    describe("given the user is not logged in(NOT Authenticated)", () => {
+     // USER IS NOT AUTHENTICATED TESTS STARTS HERE
+ 
+     // TESTING THE JWT verifyToken MIDDLEWARE
+ 
+         describe("given the user has no accessToken", () => {
+     
+             it("should return a 401 return the message : You are not authenticated!", async () => {
+             
+             // A CUSTOM ERROR MESSAGE SHOWS WHETHER THE ERROR IS IN THE JWT MIDDLEWARE OR ACTUAL CONTROLLER
+         
+ 
+             // user credentials in token to be passed on by jwt middleware , 
+             //the controller function checks the credentials in the token 
+     
+             
+       
+             const {body, statusCode} =  await request.put(`/api/users/${userPayload._id}`).send(userPayloadUpdated)
+       
+             // SAME RESULT AS THE LINE ABOVE
+ 
+             expect(statusCode).toBe(401)
+             expect(body.errorMessage).toBe("You are not authenticated!")
+     
+             }, 70000);
+     
+             // END OF IT BLOCK
+     
+           }); // END OF DESCRIBE BLOCK
+ 
+ 
+           describe("given the user has an accessToken but its not valid", () => {
+     
+             it("should return a 403 statusCode return the message : Token is not valid!", async () => {
+             
+             // A CUSTOM ERROR MESSAGE SHOWS WHETHER THE ERROR IS IN THE JWT MIDDLEWARE OR ACTUAL CONTROLLER
+         
+ 
+             // user credentials in token to be passed on by jwt middleware , 
+             //the controller function checks the credentials in the token 
+     
+             const token = jwt.sign(
+                 {
+                     // WHAT IS IN HERE ONLY MATTERS TO THE CONTROLLER, THE MIDDLEWARE SIMPLY PASSES IT ON THROUGH THE 
+                     // REQUEST PARAMETER OF THE CONTROLLER, CONTROLLER THEN USES THE VALUES AS NEEDED
+                     id: userPayload._id,
+                     isSeller: !userPayload.isSeller,
+                 },
+                 "A STRING THAT IS NOT THE JWT SECRET process.env.JWT_KEY"
+                 );
+ 
+             const {body, statusCode} =  await request.put(`/api/users/${userPayload._id}`).set("Cookie",`accessToken=${token}`).send(userPayloadUpdated)
+       
+             // const {body, statusCode} =  await request.post(`/api/gigs/`).send(gigPayload)
+             // SAME RESULT AS THE LINE ABOVE
+ 
+             expect(statusCode).toBe(403)
+             expect(body.errorMessage).toBe("Token is not valid!")
+     
+             }, 70000);
+     
+             // END OF IT BLOCK
+     
+           }); // END OF DESCRIBE BLOCK
+ 
+ 
+ 
+ 
+ 
+     });  // USER IS NOT AUTHENTICATED TESTS ENDS HERE
+ 
+    
+    // AFTER SUCCESFULLY PASSING MIDDLEWARE CHECKS NOW THIS IS TESTING ALL CONTROLLER FUNCTIONS AND ROLE AUTHORISATION
+ 
+    describe("given the user is logged in(Authenticated) ", () => {
+ 
+    // USER IS AUTHENTICATED STARTS HERE
+
+                describe("given the user to update does not exist ", () => {
+
+                    it("should return a 404 with the message : That user does not exist! ", async () => {
+
+                    // user credentials in token to be passed on by jwt middleware , 
+                    //the controller function checks the credentials in the token 
+                    
+                    // DOES NOT VERIFY CREDENTIALS INSIDE THE TOKEN BEFORE FINDING AN EXISTING GIG , BUT IT PASSES THE MIDDLEWARE TEST
+
+                    const token = jwt.sign(
+                        {
+                            id: userPayloadInvalid.userId, // THE USERS ID IS DIFFERENT TO THE ID OF THE GIG TO BE DELETED
+                            isSeller: userPayload.isSeller, // THIS IS NOT CHECKED FIRST WHEN UPDATING A GIG
+                        },
+                        process.env.JWT_KEY
+                        );
+                    
+                    // ATTEMPTING TO UPDATE A NON-EXISTENT USER
+
+                    const {body, statusCode} =  await request.put(`/api/users/${userPayloadInvalid._id}`).set("Cookie",`accessToken=${token}`).send(userPayloadUpdated)
+                    
+                    // CONTROLLER WILL CHECK TO SEE IF THE USER EXISTS
+
+                    expect(statusCode).toBe(404)
+                    expect(body.errorMessage).toBe("That user does not exist!")
+
+                    }, 70000);
+
+                        // END OF IT BLOCK
+                
+                }); // END OF DESCRIBE BLOCK WHICH CHECKS IF GIG TO UPDATE EXISTS
+
+
+                
+            
+                describe("given the user is not permitted(Authorised) to update the user details", () => {
+            
+                  it("should return a 403 with the message : You can only update your user details! ", async () => {
+            
+                    // user credentials in token to be passed on by jwt middleware , 
+                    //the controller function checks the credentials in the token 
+            
+                    const token = jwt.sign(
+                        {
+                            id: userPayloadInvalid.userId, // THE USERS ID IS DIFFERENT TO THE ID OF THE GIG TO BE DELETED
+                            isSeller: userPayload.isSeller, // THIS IS NOw CHECKED WHEN UPDATING AN EXISTING GIG
+                        },
+                        process.env.JWT_KEY
+                        );
+                    
+                    // ATTEMPTING TO UPDATE AN EXISTING GIG IN THE DATABASE
+
+
+                    const {body, statusCode} =  await request.put(`/api/users/${userPayloadSecond._id}`).set("Cookie",`accessToken=${token}`).send(userPayloadUpdated)
+                    
+                    // CONTROLLER WILL CHECK IF THE REQUESTER USERS ID MATCHES THE ID OF THE CREATOR OF THE GIG
+
+                    expect(statusCode).toBe(403)
+                    expect(body.errorMessage).toBe("You can only update your user details!")
+            
+                    }, 70000);
+            
+                      // END OF IT BLOCK
+                
+                }); // END OF DESCRIBE BLOCK
+ 
+
+
+                describe("given the user is permitted and successfully updates the user details with the correct body information", ()=> {
+          
+                  it("should return a 200 statusCode with the updated user sent back!(new username will be confirmed) ", async () => {
+            
+                    // user credentials in token to be passed on by jwt middleware , 
+                    //the controller function checks the credentials in the token 
+            
+                    const token = jwt.sign(
+                        {
+                            id: userPayload._id, // THE USERS ID IS THE SAME AS THE ID OF THE CREATOR OF THE user TO BE DELETED
+                            isSeller: userPayload.isSeller, // THIS IS NOT CHECKED WHEN DELETING A user
+                        },
+                        process.env.JWT_KEY
+                        );
+                  
+          
+                    const {body, statusCode} =  await request.put(`/api/users/${userPayload._id}`).set("Cookie",`accessToken=${token}`).send(userPayloadUpdated)
+                    
+                  // CONTROLLER WILL CHECK IF THE REQUESTER USERS ID MATCHES THE ID OF THE CREATOR OF THE GIG
+          
+                    expect(statusCode).toBe(200)
+                    expect(body.username).toBe(userPayloadUpdated.username)
+            
+                    }, 70000);
+            
+                    // END OF IT BLOCK
+
+              }); // END OF DESCRIBE BLOCK     
+             
+
+
+      
+    }); // USER IS AUTHENTICATED ENDS HERE  
+ 
+
+ 
+ }) // TESTS FOR THE UPDATING A USER CONTROLLER ENDS HERE
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+describe("deleting a user route", () => {
+ 
+    // THIS ROUTE IS PROTECTED BY THE JWT MIDDLEWARE FOR BOTH AUTHENTICATION AND PASSING ON THE DETAILS FOR ROLE AUTHORISATION) 
+    
+    // AUTHENTICATION MIDDLEWARE TESTING
+
+    describe("given the user is not logged in(NOT Authenticated)", () => {
+     // USER IS NOT AUTHENTICATED TESTS STARTS HERE
+ 
+     // TESTING THE JWT verifyToken MIDDLEWARE
+ 
+         describe("given the user has no accessToken", () => {
+     
+             it("should return a 401 return the message : You are not authenticated!", async () => {
+             
+             // A CUSTOM ERROR MESSAGE SHOWS WHETHER THE ERROR IS IN THE JWT MIDDLEWARE OR ACTUAL CONTROLLER
+         
+ 
+             // user credentials in token to be passed on by jwt middleware , 
+             //the controller function checks the credentials in the token 
+     
+             
+       
+             const {body, statusCode} =  await request.delete(`/api/users/${userPayload._id}`)
+       
+             // SAME RESULT AS THE LINE ABOVE
+ 
+             expect(statusCode).toBe(401)
+             expect(body.errorMessage).toBe("You are not authenticated!")
+     
+             }, 70000);
+     
+             // END OF IT BLOCK
+     
+           }); // END OF DESCRIBE BLOCK
+ 
+ 
+           describe("given the user has an accessToken but its not valid", () => {
+     
+             it("should return a 403 statusCode return the message : Token is not valid!", async () => {
+             
+             // A CUSTOM ERROR MESSAGE SHOWS WHETHER THE ERROR IS IN THE JWT MIDDLEWARE OR ACTUAL CONTROLLER
+         
+ 
+             // user credentials in token to be passed on by jwt middleware , 
+             //the controller function checks the credentials in the token 
+     
+             const token = jwt.sign(
+                 {
+                     // WHAT IS IN HERE ONLY MATTERS TO THE CONTROLLER, THE MIDDLEWARE SIMPLY PASSES IT ON THROUGH THE 
+                     // REQUEST PARAMETER OF THE CONTROLLER, CONTROLLER THEN USES THE VALUES AS NEEDED
+                     id: userPayload._id,
+                     isSeller: !userPayload.isSeller,
+                 },
+                 "A STRING THAT IS NOT THE JWT SECRET process.env.JWT_KEY"
+                 );
+ 
+             const {body, statusCode} =  await request.delete(`/api/users/${userPayload._id}`).set("Cookie",`accessToken=${token}`)
+       
+             // const {body, statusCode} =  await request.post(`/api/gigs/`).send(gigPayload)
+             // SAME RESULT AS THE LINE ABOVE
+ 
+             expect(statusCode).toBe(403)
+             expect(body.errorMessage).toBe("Token is not valid!")
+     
+             }, 70000);
+     
+             // END OF IT BLOCK
+     
+           }); // END OF DESCRIBE BLOCK
+ 
+ 
+ 
+ 
+ 
+     });  // USER IS NOT AUTHENTICATED TESTS ENDS HERE
+ 
+    
+    // AFTER SUCCESFULLY PASSING MIDDLEWARE CHECKS NOW THIS IS TESTING ALL CONTROLLER FUNCTIONS AND ROLE AUTHORISATION
+ 
+    describe("given the user is logged in(Authenticated) ", () => {
+ 
+    // USER IS AUTHENTICATED STARTS HERE
+
+                describe("given the user to delete does not exist ", () => {
+
+                    it("should return a 404 with the message : That user does not exist! ", async () => {
+
+                    // user credentials in token to be passed on by jwt middleware , 
+                    //the controller function checks the credentials in the token 
+                    
+                    // DOES NOT VERIFY CREDENTIALS INSIDE THE TOKEN BEFORE FINDING AN EXISTING USER , BUT IT PASSES THE MIDDLEWARE TEST
+
+                    const token = jwt.sign(
+                        {
+                            id: userPayloadInvalid.userId, // THE USERS ID IS DIFFERENT TO THE ID OF THE GIG TO BE DELETED
+                            isSeller: userPayload.isSeller, // THIS IS NOT CHECKED FIRST WHEN UPDATING A GIG
+                        },
+                        process.env.JWT_KEY
+                        );
+                    
+                    // ATTEMPTING TO UPDATE A NON-EXISTENT USER
+
+                    const {body, statusCode} =  await request.delete(`/api/users/${userPayloadInvalid._id}`).set("Cookie",`accessToken=${token}`)
+                    
+                    // CONTROLLER WILL CHECK TO SEE IF THE USER EXISTS
+
+                    expect(statusCode).toBe(404)
+                    expect(body.errorMessage).toBe("That user does not exist!")
+
+                    }, 70000);
+
+                        // END OF IT BLOCK
+                
+                }); // END OF DESCRIBE BLOCK WHICH CHECKS IF GIG TO UPDATE EXISTS
+
+
+                
+            
+                describe("given the user is not permitted(Authorised) to delete the user", () => {
+            
+                  it("should return a 403 with the message : You can only delete your user details! ", async () => {
+            
+                    // user credentials in token to be passed on by jwt middleware , 
+                    //the controller function checks the credentials in the token 
+            
+                    const token = jwt.sign(
+                        {
+                            id: userPayloadInvalid.userId, // THE USERS ID IS DIFFERENT TO THE ID OF THE GIG TO BE DELETED
+                            isSeller: userPayload.isSeller, // THIS IS NOw CHECKED WHEN UPDATING AN EXISTING GIG
+                        },
+                        process.env.JWT_KEY
+                        );
+                    
+                    // ATTEMPTING TO DELETE AN EXISTING USER IN THE DATABASE
+
+
+                    const {body, statusCode} =  await request.delete(`/api/users/${userPayloadSecond._id}`).set("Cookie",`accessToken=${token}`)
+                    
+                    // CONTROLLER WILL CHECK IF THE REQUESTER USERS ID MATCHES THE ID OF THE CREATOR OF THE GIG
+
+                    expect(statusCode).toBe(403)
+                    expect(body.errorMessage).toBe("You can only delete your user details!")
+            
+                    }, 70000);
+            
+                      // END OF IT BLOCK
+                
+                }); // END OF DESCRIBE BLOCK
+ 
+
+
+                describe("given the user is permitted and successfully deletes the user", ()=> {
+          
+                  it("should return a 200 statusCode with the successMessage : User has been deleted!", async () => {
+            
+                    // user credentials in token to be passed on by jwt middleware , 
+                    //the controller function checks the credentials in the token 
+            
+                    const token = jwt.sign(
+                        {
+                            id: userPayload._id, // THE USERS ID IS THE SAME AS THE ID OF THE CREATOR OF THE user TO BE DELETED
+                            isSeller: userPayload.isSeller, // THIS IS NOT CHECKED WHEN DELETING A user
+                        },
+                        process.env.JWT_KEY
+                        );
+                  
+          
+                    const {body, statusCode} =  await request.delete(`/api/users/${userPayload._id}`).set("Cookie",`accessToken=${token}`)
+                    
+          
+                    expect(statusCode).toBe(200)
+                    expect(body.successMessage).toBe("User has been deleted!")
+            
+                    }, 70000);
+            
+                    // END OF IT BLOCK
+
+              }); // END OF DESCRIBE BLOCK     
+             
+
+
+      
+    }); // USER IS AUTHENTICATED ENDS HERE  
+ 
+
+ 
+ }) // TESTS FOR THE UPDATING A USER CONTROLLER ENDS HERE
+
+
+
+
+
+
+
+
+
+
+
+
+
+});
+
+
+*/

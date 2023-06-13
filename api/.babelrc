@@ -1,0 +1,6 @@
+{
+  "presets" : ["@babel/preset-env"]   
+}
+
+
+// ALLOWS THE USE OF ES6 IMPORT WITH TEST FILES

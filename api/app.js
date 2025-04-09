@@ -27,7 +27,7 @@ export const app = express();
 app.set("trust proxy", true);
 
 // CORS HEADER
-app.use(cors({ origin: "https://fiverr-template-phi.vercel.app", credentials: true,  exposedHeaders: ["set-cookie"] }));
+app.use(cors({ origin: "https://https://app2.mybackendserver.pro/", credentials: true,  exposedHeaders: ["set-cookie"] }));
 
 // SESSION SETUP AND PERSISTING SESSION DATA IN MONGO-DB
 const url = process.env.MONGO
@@ -51,7 +51,7 @@ app.use(session({
   cookie : {secure : true, // SET TO FALSE TO RUN TESTS (HTTP SESSION COOKIE PERSISTENCE)
             // COMMENT OUT SAMESITE,DOMAIN AND PATH FOR TESTS 
             sameSite : 'none',
-            // domain: '.localhost', // ALL LOCAL HOST SUBDOMAINS
+            domain: 'app2.mybackendserver.pro', // ALL LOCAL HOST SUBDOMAINS
             // path: '/api', // CAN USE IT FOR DIFFERENT VVERSIONS OF APP
             // COULD HAVE TWO APP.JS LIKE FILES WITH SLIGHT DIFFERENCES IN ROUTES
             // AND MIDDLEWARES

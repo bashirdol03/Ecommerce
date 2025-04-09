@@ -27,7 +27,7 @@ export const app = express();
 app.set("trust proxy", true);
 
 // CORS HEADER
-app.use(cors({ origin: "fiverr-template-phi.vercel.app", credentials: true,  exposedHeaders: ["set-cookie"] }));
+app.use(cors({ origin: "https://fiverr-template-phi.vercel.app", credentials: true,  exposedHeaders: ["set-cookie"] }));
 
 // SESSION SETUP AND PERSISTING SESSION DATA IN MONGO-DB
 const url = process.env.MONGO

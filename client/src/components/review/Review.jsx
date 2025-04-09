@@ -62,7 +62,7 @@ const Review = ({ review }) => {
       <p>{review.desc}</p>
       {currentUser?._id === review.userId && (<div className="helpful">
         <span>Delete your review</span>
-        <img src="/img/delete.png" alt="" onClick={() => handleDelete(review._id)} />
+        <span onClick={() => handleDelete(review._id)}>"❌"</span>
       </div>)}
     </div>
   );

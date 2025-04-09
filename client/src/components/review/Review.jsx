@@ -53,16 +53,14 @@ const Review = ({ review }) => {
           </div>
         </div>
       )}
-      <div className="stars">
-        {Array(review.star)
-          .fill()
-          .map((item, i) => (
-            <img src="/img/star.png" alt="" key={i} />
-          ))}
-        <span>{review.star}</span>
+     <div className="stars">
+      <span className="emoji-stars">
+      {"⭐".repeat(Math.round(review.star))}
+      </span>
+      <span className="rating-number">{Math.round(review.star)}</span>
       </div>
       <p>{review.desc}</p>
-      {currentUser._id === review.userId && (<div className="helpful">
+      {currentUser?._id === review.userId && (<div className="helpful">
         <span>Delete your review</span>
         <img src="/img/delete.png" alt="" onClick={() => handleDelete(review._id)} />
       </div>)}

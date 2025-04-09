@@ -62,7 +62,7 @@ function Admin() {
         <>   
     <div className="gigs">   
       <div className="container">
-        <span className="breadcrumbs">Liverr  Graphics & Design </span>
+        <span className="breadcrumbs"></span>
         <h1>Registered Users</h1>
         <p>
           look at the users on the website

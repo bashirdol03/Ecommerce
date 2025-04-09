@@ -200,6 +200,7 @@ export const loginWithGoogle = async (req, res, next) => {
             }  
                   
         } catch (err) {
+          console.log(err);
           console.log("mongoose error")
           return next(err)
           // EVEN IF YOU NEED MULTIPLE TRY-CATCH BLOCKS, SIMPLY PASS THE ERROR OBJECT 

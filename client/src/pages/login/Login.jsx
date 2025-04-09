@@ -1,4 +1,4 @@
-import React, { useState , useContext} from "react";
+import React, { useState , useEffect, useContext} from "react";
 import "./Login.scss";
 import newRequest from "../../utils/newRequest";
 import { useNavigate } from "react-router-dom";
@@ -12,6 +12,21 @@ function Login() {
   const [error, setError] = useState(null);
 
   const { currentUser, setCurrentUser, /*setPrevUser*/ } = useContext(UserContext);
+
+  const getLoggedInUser = async () => {
+    try {
+      const res = await newRequest.get("/users/current/user");
+      setCurrentUser(res.data);
+      navigate("/"); // Redirect to home if already logged in
+    } catch (err) {
+      setCurrentUser(null); // stay on login if not logged in
+    }
+  };
+
+  useEffect(() => {
+    getLoggedInUser();
+  }, []);
+  
 
 
   // CODE BELOW MUST BE IN THIS FORMAT TO WORK
@@ -75,9 +90,9 @@ function Login() {
     <div className="login">
       <form onSubmit={handleSubmit}>
         <h1>Sign in</h1>
-        <label htmlFor="">Username</label>
+        <label htmlFor="">Email</label>
         <input
-          name="username"
+          name="email"
           type="email"
           placeholder="johndoe"
           onChange={(e) => setEmail(e.target.value)}
@@ -94,12 +109,12 @@ function Login() {
         <button type="button" onClick={() => googleLogin()}>
         Sign in with Google 🚀{' '}
         </button>
-        <button type="button" onClick={() => handleLogout()}>
+       {/* <button type="button" onClick={() => handleLogout()}>
         Logout
         </button>
         <button type="button" onClick={() => showCurrentuser()}>
         see current user
-        </button>
+        </button>*/}
         {currentUser && currentUser.email}
       </form>
 

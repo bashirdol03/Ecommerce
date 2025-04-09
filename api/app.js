@@ -24,6 +24,11 @@ dotenv.config()
 
 export const app = express();
 
+app.set("trust proxy", true);
+
+// CORS HEADER
+app.use(cors({ origin: "http://localhost:5000", credentials: true,  exposedHeaders: ["set-cookie"] }));
+
 // SESSION SETUP AND PERSISTING SESSION DATA IN MONGO-DB
 const url = process.env.MONGO
 const sessionSecret = process.env.SESSION_SECRET
@@ -43,21 +48,19 @@ app.use(session({
   saveUninitialized : false,
   store : sessionStore,
   // DONT SET ANY COOKIE OPTIONS HERE, STOPS SESSION DATA PERSISTING
-  cookie : {secure : true, // SET TO FALSE TO RUN TESTS (HTTP SESSION COOKIE PERSISTENCE)
+  cookie : {secure : false, // SET TO FALSE TO RUN TESTS (HTTP SESSION COOKIE PERSISTENCE)
             // COMMENT OUT SAMESITE,DOMAIN AND PATH FOR TESTS 
-            sameSite : 'none',
-            domain: '.localhost', // ALL LOCAL HOST SUBDOMAINS
-            path: '/api', // CAN USE IT FOR DIFFERENT VVERSIONS OF APP
+            // sameSite : 'none',
+            // domain: '.localhost', // ALL LOCAL HOST SUBDOMAINS
+            // path: '/api', // CAN USE IT FOR DIFFERENT VVERSIONS OF APP
             // COULD HAVE TWO APP.JS LIKE FILES WITH SLIGHT DIFFERENCES IN ROUTES
             // AND MIDDLEWARES
-            httpOnly : true,
+            // httpOnly : true,
             maxAge: 2 * 60 * 60 * 1000 // EXPIRES IN 2 HOURS , TIME IN MILLISECONDS
           } // MUST BE FALSE TO WORK AS IM USING HTTP CONNECTION
         
 })) 
 
-// CORS HEADER
-app.use(cors({ origin: "https://localhost:5000", credentials: true }));
 
 // ADDITIONAL HTTP HEADER SECURITY
 app.use(helmet()) 
@@ -94,6 +97,7 @@ app.use("/api/reviews", logger, reviewRoute);
 app.use(errorLogger,(err, req, res, next) => {
   const errorStatus = err.status || 500;
   const errorMessage = err.message || "Something went wrong!";
+  console.log(errorMessage)
 
   return res.status(errorStatus).json({"errorMessage": errorMessage});
   

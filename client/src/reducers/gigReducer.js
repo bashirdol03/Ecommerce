@@ -24,7 +24,7 @@ export const gigReducer = (state, action) => {
     case "ADD_IMAGES":
       return {
         ...state,
-        cover: action.payload.cover,
+        coverImage: action.payload.cover,
         images: action.payload.images,
       };
     case "ADD_FEATURE":

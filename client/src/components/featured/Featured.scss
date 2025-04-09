@@ -1,95 +1,114 @@
 .featured {
-  height: 600px;
   display: flex;
   justify-content: center;
+  align-items: center;
   background-color: #013914;
   color: white;
+  padding: 60px 20px;
+  min-height: 80vh; // 👈 fills 80% of the screen height
 
   .container {
-    width: 1400px;
+    width: 100%;
+    max-width: 900px;
     display: flex;
+    flex-direction: column;
     align-items: center;
+    text-align: center;
+    gap: 20px;
 
-    .left {
+    h1 {
+      font-size: 40px;
+      font-weight: bold;
+    }
+
+    p {
+      font-size: 18px;
+      color: #dddddd;
+    }
+
+    .search {
       display: flex;
-      flex-direction: column;
-      gap: 30px;
+      justify-content: center;
+      align-items: center;
+      background-color: white;
+      border-radius: 5px;
+      overflow: hidden;
+      width: 100%;
+      max-width: 600px;
+      margin-top: 20px;
 
-      h1 {
-        font-size: 50px;
-
-        span {
-          font-style: italic;
-          font-weight: 300;
-        }
-      }
-
-      .search {
-        background-color: white;
-        border-radius: 5px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        overflow: hidden;
-
-        .searchInput {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          img {
-            width: 20px;
-            height: 20px;
-            margin: 10px;
-          }
-
-          input {
-            border: none;
-            outline: none;
-
-            &::placeholder {
-              color: gray;
-            }
-          }
-        }
-
-        button {
-          width: 120px;
-          height: 50px;
-          border: none;
-          background-color: #1dbf73;
-          color: white;
-          align-self: flex-end;
-          cursor: pointer;
-        }
-      }
-
-      .popular {
+      .searchInput {
         display: flex;
         align-items: center;
         gap: 10px;
+        flex: 1;
+        padding: 0 10px;
 
-        span {
-          width: max-content;
+        img {
+          width: 20px;
+          height: 20px;
         }
 
-        button {
-          width: max-content;
-          color: white;
-          border: 1px solid white;
-          padding: 5px 10px;
-          border-radius: 20px;
-          background-color: transparent;
-          font-size: 14px;
+        input {
+          flex: 1;
+          border: none;
+          outline: none;
+          padding: 15px;
+          font-size: 16px;
+
+          &::placeholder {
+            color: gray;
+          }
+        }
+      }
+
+      button {
+        width: 120px;
+        height: 50px;
+        border: none;
+        background-color: #1dbf73;
+        color: white;
+        font-weight: 500;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: #19a463;
         }
       }
     }
+  }
 
-    .right {
-      height: 100%;
-      img {
-        height: 100%;
-        object-fit: contain;
+  @media (max-width: 768px) {
+    .container {
+      h1 {
+        font-size: 28px;
+      }
+
+      p {
+        font-size: 16px;
+      }
+
+      .search {
+        flex-direction: column;
+        align-items: stretch;
+
+        .searchInput {
+          width: 100%;
+          padding: 10px;
+
+          input {
+            width: 100%;
+          }
+        }
+
+        button {
+          width: 100%;
+          border-radius: 0;
+        }
       }
     }
   }
 }
+

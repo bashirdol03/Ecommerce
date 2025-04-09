@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState , useEffect, useContext} from "react";
 import upload from "../../utils/upload";
 import "./Register.scss";
 import newRequest from "../../utils/newRequest";
 import { useNavigate } from "react-router-dom";
+import {UserContext} from '../../context/UserContext';
 
 function Register() {
   const [errorMessage, setErrorMessage] = useState("")
@@ -20,6 +21,23 @@ function Register() {
   console.log(user)
 
   const navigate = useNavigate();
+
+  const { currentUser, setCurrentUser, /*setPrevUser*/ } = useContext(UserContext);
+
+  const getLoggedInUser = async () => {
+    try {
+      const res = await newRequest.get("/users/current/user");
+      setCurrentUser(res.data);
+      navigate("/"); // Redirect to home if already logged in
+    } catch (err) {
+      setCurrentUser(null); // stay on login if not logged in
+    }
+  };
+
+  useEffect(() => {
+    getLoggedInUser();
+  }, []);
+  
 
   const handleChange = (e) => {
     setUser((prev) => {

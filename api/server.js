@@ -7,6 +7,7 @@ import fs from 'fs'
 
 dotenv.config();
 
+/*
 const cert = process.env.CERT
 const certKey = process.env.CERT_KEY
 
@@ -15,6 +16,8 @@ const privateKey = fs.readFileSync(`${certKey}`);
 
 const credentials = { key: privateKey, cert: certificate};
 const httpsServer = https.createServer(credentials, app);
+
+*/
 
 mongoose.set("strictQuery", true);
 
@@ -26,8 +29,8 @@ dbConnection()
 
 const PORT = process.env.PORT || 3001
 
-httpsServer.listen(PORT, () => {
-    console.log(`SERVER STARTED ON PORT ${PORT}, FROM 6005CEM SECURITY FOLDER`);
+app.listen(PORT, () => {
+    console.log(`SERVER STARTED ON PORT ${PORT}`);
   });
 
  

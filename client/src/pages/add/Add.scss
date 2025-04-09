@@ -3,8 +3,9 @@
   justify-content: center;
 
   .container {
-    width: 1400px;
-    padding: 50px 0px;
+    width: 100%;
+    max-width: 1400px;
+    padding: 50px 20px;
 
     h1 {
       width: max-content;
@@ -17,6 +18,7 @@
       display: flex;
       justify-content: space-between;
       gap: 100px;
+      flex-wrap: wrap;
 
       label {
         color: gray;
@@ -25,65 +27,116 @@
 
       .info,
       .details {
-        flex: 1;
+        flex: 1 1 100%;
         display: flex;
         flex-direction: column;
         gap: 10px;
-        justify-content: space-between;
 
         input,
         select,
         textarea {
           padding: 20px;
+          font-size: 16px;
+          border: 1px solid #ccc;
         }
 
-        .images{
+        .images {
           display: flex;
-          align-items: center;
+          align-items: flex-start;
           gap: 20px;
+          flex-direction: column;
 
-          .imagesInputs{
+          .imagesInputs {
             display: flex;
             flex-direction: column;
             gap: 20px;
           }
         }
 
-        button {
-          border: none;
-          padding: 20px;
-          color: white;
-          font-weight: 500;
-          font-size: 18px;
-          background-color: #1dbf73;
-          cursor: pointer;
-        }
-
-        .add{
+        .addFeature {
           display: flex;
-          justify-content: space-between;
+          gap: 10px;
+          margin-top: 10px;
 
-          input{
-            width: 80%;
+          input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+          }
+
+          button {
+            padding: 10px 15px;
+            font-size: 14px;
+            background-color: #1dbf73;
+            color: white;
+            border: none;
+            cursor: pointer;
           }
         }
 
-        .addedFeatures{
+        .addedFeatures {
           display: flex;
-          gap: 20px;
+          flex-wrap: wrap;
+          gap: 10px;
 
-          button{
-            height: 30px;
-            font-size: 12px;
-            font-weight: 400;
-            background: transparent;
-            color: red;
-            border: 1px solid red;
-            display: flex;
-            align-items: center;
-            gap: 20px;
+          .item {
+            button {
+              height: 30px;
+              font-size: 12px;
+              font-weight: 400;
+              background: transparent;
+              color: red;
+              border: 1px solid red;
+              display: flex;
+              align-items: center;
+              gap: 10px;
+              padding: 0 10px;
+              cursor: pointer;
+            }
           }
         }
+      }
+    }
+
+    .submitContainer {
+      display: flex;
+      justify-content: flex-start;
+      margin-top: 30px;
+
+      button {
+        border: none;
+        padding: 15px 25px;
+        color: white;
+        font-weight: 500;
+        font-size: 18px;
+        background-color: #1dbf73;
+        cursor: pointer;
+        width: fit-content;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .container {
+      padding: 30px 10px;
+    }
+
+    .sections {
+      flex-direction: column;
+      gap: 50px;
+    }
+
+    .info,
+    .details {
+      width: 100%;
+    }
+
+    .submitContainer {
+      justify-content: center;
+
+      button {
+        width: 100%;
       }
     }
   }

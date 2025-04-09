@@ -5,6 +5,8 @@ import createError from "../utils/createError.js";
 // CRUD AND TESTING COMPLETE
 
 export const createGig = async (req, res, next) => {
+
+  console.log(req.body)
   
   try {
         

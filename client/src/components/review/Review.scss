@@ -2,51 +2,79 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  margin: 20px 0px;
+  margin: 20px 0;
+
   .user {
     display: flex;
     align-items: center;
+    gap: 12px;
+
     .pp {
       height: 50px;
       width: 50px;
       border-radius: 50%;
+      object-fit: cover;
     }
 
-    .country {
+    .info {
       display: flex;
-      align-items: center;
-      gap: 10px;
-      color: gray;
+      flex-direction: column;
+      gap: 4px;
 
-      img {
-        width: 20px;
+      span {
+        font-weight: 500;
+      }
+
+      .country {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: gray;
+        font-size: 13px;
+
+        img {
+          width: 16px;
+        }
       }
     }
   }
 
   .stars {
     display: flex;
-    gap: 5px;
-
-    img {
-      height: 14px;
-      width: 14px;
+    align-items: center;
+    gap: 6px;
+  
+    .emoji-stars {
+      font-size: 14px; 
+      line-height: 1;
     }
-
-    span {
-      font-size: 14px;
-      font-weight: bold;
+  
+    .rating-number {
+      font-size: 13px;
+      font-weight: 600;
       color: #ffc108;
     }
+  }
+  
+  
+
+  p {
+    font-size: 14px;
+    line-height: 22px;
+    color: #444;
   }
 
   .helpful {
     display: flex;
     align-items: center;
     gap: 10px;
+    font-size: 13px;
+    color: #888;
 
     img {
       width: 14px;
+      height: 14px;
+      cursor: pointer;
     }
   }
 }

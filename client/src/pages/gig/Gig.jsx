@@ -1,6 +1,5 @@
 import React, {useContext} from "react";
 import "./Gig.scss";
-import { Slider } from "infinite-react-carousel/lib";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import newRequest from "../../utils/newRequest";
@@ -70,9 +69,6 @@ function Gig() {
       ) : (
         <div className="container">
           <div className="left">
-            <span className="breadcrumbs">
-              Fiverr {">"} Graphics & Design {">"}
-            </span>
             <h1>{data.title}</h1>
             {isLoadingUser ? (
               "loading"
@@ -98,18 +94,22 @@ function Gig() {
                 )}
               </div>
             )}
-            {/*<Slider slidesToShow={1} arrowsScroll={1} className="slider">
-              {data.images.map((img) => (
-                <img key={img} src={img} alt="" />
-              ))}
-            </Slider>*/}
+            
 
              
             <img src={data.coverImage} alt="" />
+
+            {data.images?.length > 0 && (
+              <div className="gallery">
+                {data.images.map((img, i) => (
+                  <img key={i} src={img} alt={`gig-image-${i}`} />
+                ))}
+              </div>
+            )}
             
 
             <h2>About This Gig</h2>
-            <p>{data.desc}</p>
+            <p>{data.description}</p>
             {isLoadingUser ? (
               "loading"
             ) : errorUser ? (
@@ -142,28 +142,32 @@ function Gig() {
                   </div>
                 </div>
                 <div className="box">
-                  <div className="items">
+
+
+                <div className="items">
                     <div className="item">
                       <span className="title">From</span>
                       <span className="desc">{dataUser.country}</span>
                     </div>
                     <div className="item">
-                      <span className="title">Member since</span>
-                      <span className="desc">Aug 2022</span>
+                      <span className="title">Delivery Time</span>
+                      <span className="desc">{data.deliveryTime} Days</span>
                     </div>
                     <div className="item">
-                      <span className="title">Avg. response time</span>
-                      <span className="desc">4 hours</span>
+                      <span className="title">Revisions</span>
+                      <span className="desc">{data.revisionNumber}</span>
                     </div>
                     <div className="item">
-                      <span className="title">Last delivery</span>
-                      <span className="desc">1 day</span>
+                      <span className="title">Gig Created</span>
+                      <span className="desc">
+                        {new Date(data.createdAt).toLocaleDateString("default", {
+                          month: "short",
+                          year: "numeric",
+                        })}
+                      </span>
                     </div>
-                    <div className="item">
-                      <span className="title">Languages</span>
-                      <span className="desc">English</span>
-                    </div>
-                  </div>
+                 </div>
+
                   <hr />
                   <p>{dataUser.desc}</p>
                 </div>
@@ -196,9 +200,15 @@ function Gig() {
                 </div>
               ))}
             </div>
-            { currentUser.role === "USER" && 
-            <button onClick={()=>{handleOrder(data._id)}}>Order</button>
-            }
+            {currentUser?.role === "USER" && (
+            <button onClick={() => handleOrder(data._id)}>Order</button>
+              ) }
+
+            {!currentUser && (
+              <p className="login-message">Sign in to place an order</p>
+            )}
+             
+
           </div>
         </div>
       )}

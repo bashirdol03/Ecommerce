@@ -26,8 +26,18 @@ export const app = express();
 
 app.set("trust proxy", true);
 
+const isProduction = process.env.NODE_ENV === "production";
+const frontendUri = process.env.FRONTEND_URL;
+const prodDomain = process.env.PROD_DOMAIN;
+
 // CORS HEADER
-app.use(cors({ origin: "https://app2.mybackendserver.pro", credentials: true,  exposedHeaders: ["set-cookie"] }));
+app.use(cors({
+  origin: isProduction
+    ? frontendUri 
+    : "http://localhost:5000",
+  credentials: true,
+  exposedHeaders: ["set-cookie"]
+}));
 
 // SESSION SETUP AND PERSISTING SESSION DATA IN MONGO-DB
 const url = process.env.MONGO
@@ -48,10 +58,10 @@ app.use(session({
   saveUninitialized : false,
   store : sessionStore,
   // DONT SET ANY COOKIE OPTIONS HERE, STOPS SESSION DATA PERSISTING
-  cookie : {secure : true, // SET TO FALSE TO RUN TESTS (HTTP SESSION COOKIE PERSISTENCE)
+  cookie : {secure :  isProduction , // SET TO FALSE TO RUN TESTS (HTTP SESSION COOKIE PERSISTENCE)
             // COMMENT OUT SAMESITE,DOMAIN AND PATH FOR TESTS 
-            sameSite : 'none',
-            domain: '.mybackendserver.pro', // ALL LOCAL HOST SUBDOMAINS
+            sameSite : isProduction ? "none" : "lax",
+            domain: isProduction ? prodDomain : "localhost", // ALL LOCAL HOST SUBDOMAINS
             // path: '/api', // CAN USE IT FOR DIFFERENT VVERSIONS OF APP
             // COULD HAVE TWO APP.JS LIKE FILES WITH SLIGHT DIFFERENCES IN ROUTES
             // AND MIDDLEWARES

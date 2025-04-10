@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const newRequest = axios.create({
-  baseURL: "https://api.mybackendserver.pro/api",
+  baseURL: import.meta.env.VITE_API_URL,
   withCredentials: true,
 });
 

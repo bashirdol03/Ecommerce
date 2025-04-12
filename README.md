@@ -4,7 +4,7 @@ This is a full-stack **E-Commerce platform** I built using the **MERN stack** (M
 
 The core idea was to build something functional and secure, where users can sign up, browse listings, place orders, and leave reviews — while sellers can manage their own services. 
 
-Most of my time and effort went into developing a solid backend, with a strong focus on authentication, sessions, testing, and security best practices. The frontend is simple and clean, but it was the backend architecture that I really wanted to get right.
+Most of my time and effort went into developing a solid backend, with a strong focus on authentication, sessions, testing, and security best practices. The frontend is pretty simple, but it was the backend architecture that I really wanted to get right.
 
 
 👉 **Live Demo**: [https://app2.mybackendserver.pro(https://app2.mybackendserver.pro)

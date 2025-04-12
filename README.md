@@ -39,13 +39,18 @@ Password: Password1@
 ## ✨ Features
 
 ### 🔐 Authentication & Session Security
-- Register/login with email + password (includes password strength validation & confirmation)
-- Google OAuth 2.0 login
+
+- Register/login with email + password (includes password strength validation & confirmation)  
+- Google OAuth 2.0 login  
 - Session cookies scoped to `.mybackendserver.pro`, configured with:
   - `SameSite=None`
   - `Secure: true`
   - `HttpOnly: true`
-- Secure logout and login restrictions across sessions
+- Session data is persisted in MongoDB using `express-session`  
+- Zustand handles client-side auth state  
+- React Query polls the backend (`/users/getLoggedInUser`) on protected routes to auto-logout users when sessions expire  
+- Secure logout and login restrictions enforced across sessions
+
 
 ### 👤 User Roles
 - **Buyer**: Browse gigs, place orders, and review only completed orders

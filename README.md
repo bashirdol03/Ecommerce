@@ -7,7 +7,7 @@ The core idea was to build something functional and secure, where users can sign
 Most of my time and effort went into developing a solid backend, with a strong focus on authentication, sessions, testing, and security best practices. The frontend is pretty simple, but it was the backend architecture that I really wanted to get right.
 
 
-👉 **Live Demo**: [https://app2.mybackendserver.pro(https://app2.mybackendserver.pro)
+👉 **Live Demo**: [https://app2.mybackendserver.pro](https://app2.mybackendserver.pro)
 
 ---
 

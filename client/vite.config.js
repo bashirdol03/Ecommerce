@@ -17,7 +17,7 @@ export default defineConfig(({ mode }) => {
     define: processEnvValues,
     server: {
       port: 5000, // optional, defaults to 5173
-      // https is gone 🎉
+      
     },
   };
 });
